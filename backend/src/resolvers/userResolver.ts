@@ -1,17 +1,19 @@
-import { UserModel } from '../models/User'
+import { Types } from 'mongoose';
+import { UserModel } from '../models/user/User'
+import { CreateUserArgs, DeleteUserArgs, UpdateUserArgs, UserArgs, UsersArgs } from '../models/user/User.types';
 
 export const resolvers = {
 	Query: {
-		user: async (_: any, { id }: { id: string }) => {
+		user: async (_: unknown, { id }: UserArgs) => {
 			return await UserModel.findById(id)
 		},
 		users: async (
-			_: any,
+			_: unknown,
 			{
 				skip = 0,
 				limit = 10,
 				filter,
-			}: { skip?: number; limit?: number; filter?: { search?: string } }
+			}: UsersArgs
 		) => {
 			const query: any = {}
 			if (filter?.search) {
@@ -23,19 +25,19 @@ export const resolvers = {
 	},
 
 	Mutation: {
-		createUser: async (_: any, { input }: any) => {
+		createUser: async (_: unknown, { input }: CreateUserArgs) => {
 			const user = new UserModel(input)
 			return await user.save()
 		},
-		updateUser: async (_: any, { id, input }: any) => {
+		updateUser: async (_: unknown, { id, input }: UpdateUserArgs) => {
 			return await UserModel.findByIdAndUpdate(id, input, { new: true })
 		},
-		deleteUser: async (_: any, { id }: { id: string }) => {
+		deleteUser: async (_: unknown, { id }: DeleteUserArgs) => {
 			return await UserModel.findByIdAndDelete(id)
 		},
 	},
 
 	User: {
-		id: (parent: any) => parent._id.toString(),
+		id: (parent: { _id: Types.ObjectId | string }) => parent._id.toString(),
 	},
 }

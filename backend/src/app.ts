@@ -16,8 +16,6 @@ async function startServer() {
 		process.env.MONGODB_URI || 'mongodb://localhost:27017/users_db'
 	)
 
-	// await mongoose.connect('mongodb://localhost:27017/users_db')
-
 	const server = new ApolloServer({ typeDefs, resolvers })
 	await server.start()
 	app.use(
@@ -27,7 +25,6 @@ async function startServer() {
 			credentials: true,
 		}),
 		express.json(),
-		//@ts-ignore
 		expressMiddleware(server)
 	)
 

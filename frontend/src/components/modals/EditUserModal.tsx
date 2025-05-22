@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client'
 import {
 	Button,
-	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -10,14 +9,12 @@ import {
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { z } from 'zod'
 import { UPDATE_USER } from '../../graphql/mutations'
 import { GET_USER_BY_ID } from '../../graphql/queries'
+import { userSchema } from '../../types/form.types'
+import { Loading } from '../ui/Loading'
+import { ErrorPage }from '../ui/ErrorPage'
 
-const schema = z.object({
-	email: z.string().email('Некорректный email'),
-	name: z.string().min(1, 'Имя обязательно'),
-})
 
 export function EditUserModal() {
 	const { id } = useParams<{ id: string }>()
@@ -42,8 +39,13 @@ export function EditUserModal() {
 		}
 	}, [data])
 
-	if (loading) return <CircularProgress />
-	if (error) return <p>Error: {error.message}</p>
+	if (loading) {
+		return <Loading />
+	}
+
+	if (error) {
+		return <ErrorPage error={error} />
+	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -55,7 +57,7 @@ export function EditUserModal() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
-		const result = schema.safeParse(form)
+		const result = userSchema.safeParse(form)
 		if (!result.success) {
 			const fieldErrors = result.error.flatten().fieldErrors
 			setErrors({
@@ -65,12 +67,36 @@ export function EditUserModal() {
 			return
 		}
 
-		await updateUser({ variables: { id, input: form } })
-		handleClose()
+		try {
+			await updateUser({ variables: { id, input: form } })
+			handleClose()
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				const message = err.message
+				if (message.includes('E11000 duplicate key error')) {
+					setErrors(prev => ({
+						...prev,
+						email: 'Пользователь с таким email уже существует',
+					}))
+				}
+			} else {
+				console.error(err)
+			}
+		}
+		
 	}
 
 	return (
-		<Dialog open onClose={handleClose}>
+		<Dialog 
+			open 
+			onClose={handleClose} 
+			sx={{
+				'& .MuiDialog-paper': {
+					width: '500px',
+					maxWidth: '90vw',
+					minHeight: '320px',
+				},
+		}}>
 			<DialogTitle>Редактировать пользователя</DialogTitle>
 			<DialogContent>
 				<form id='edit-user-form' onSubmit={handleSubmit}>

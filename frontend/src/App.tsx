@@ -1,9 +1,9 @@
 import { Route, Routes, useLocation } from 'react-router-dom'
-import UserTable from './components/UserTable'
-import CreateUserModal from './components/modals/CreateUserModal'
+import { UserTable } from './components/UserTable'
 import { DeleteUserModal } from './components/modals/DeleteUserModal'
 import { EditUserModal } from './components/modals/EditUserModal'
 import { ViewUserModel } from './components/modals/ViewUserModal'
+import { CreateUserModal } from './components/modals/CreateUserModal'
 
 function App() {
 	const location = useLocation()

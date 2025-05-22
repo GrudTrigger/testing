@@ -5,7 +5,7 @@ import { IconButton, TableCell, TableRow } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
 import type { User } from '../types/user.types'
 
-function UserTableRow({ user }: { user: User }) {
+export function UserTableRow({ user }: { user: User }) {
 	const navigate = useNavigate()
 	const location = useLocation()
 
@@ -47,5 +47,3 @@ function UserTableRow({ user }: { user: User }) {
 		</>
 	)
 }
-
-export default UserTableRow

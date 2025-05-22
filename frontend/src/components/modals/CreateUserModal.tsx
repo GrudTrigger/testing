@@ -9,23 +9,15 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import { CREATE_USER } from '../../graphql/mutations'
 import { GET_USERS } from '../../graphql/queries'
+import { userSchema, type FormData } from '../../types/form.types'
 
-const userSchema = z.object({
-	email: z.string().email('Неверный формат email'),
-	name: z.string().min(1, 'Имя обязательно'),
-})
 
-type FormData = z.infer<typeof userSchema>
-
-export default function CreateUserModal() {
+export function CreateUserModal() {
 	const navigate = useNavigate()
 	const [form, setForm] = useState({ email: '', name: '' })
-	const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
-		{}
-	)
+	const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
 
 	const [createUser] = useMutation(CREATE_USER, {
 		refetchQueries: [{ query: GET_USERS }],
@@ -67,7 +59,7 @@ export default function CreateUserModal() {
 					}))
 				}
 			} else {
-				console.error('Unexpected error:', err)
+				console.error(err)
 			}
 		}
 	}

@@ -39,7 +39,7 @@ export function ViewUserModel() {
 						<Stack spacing={3} mb={3}>
 							<Box>
 								<Typography variant='body2' color='text.secondary'>
-									Name:
+									Имя:
 								</Typography>
 								<Typography variant='subtitle1'>{data.user.name}</Typography>
 							</Box>

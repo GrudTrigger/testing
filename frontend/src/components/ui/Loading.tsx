@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from '@mui/material'
 
-function Loading() {
+export function Loading() {
 	return (
 		<Box display='flex' justifyContent='center' mt={4}>
 			<CircularProgress />
@@ -8,4 +8,3 @@ function Loading() {
 	)
 }
 
-export default Loading
