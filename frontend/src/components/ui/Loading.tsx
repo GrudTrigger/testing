@@ -1,10 +1,9 @@
-import { Box, CircularProgress } from '@mui/material'
+import { Box, CircularProgress } from "@mui/material";
 
 export function Loading() {
-	return (
-		<Box display='flex' justifyContent='center' mt={4}>
-			<CircularProgress />
-		</Box>
-	)
+  return (
+    <Box display="flex" justifyContent="center" mt={4}>
+      <CircularProgress />
+    </Box>
+  );
 }
-

@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const userSchema = z.object({
-    email: z.string().email('Неверный формат email'),
-    name: z.string().min(1, 'Имя обязательно'),
-})
+  email: z.string().email("Неверный формат email"),
+  name: z.string().min(1, "Имя обязательно"),
+});
 
-export type FormData = z.infer<typeof userSchema>
+export type FormData = z.infer<typeof userSchema>;

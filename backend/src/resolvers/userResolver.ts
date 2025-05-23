@@ -1,43 +1,43 @@
-import { Types } from 'mongoose';
-import { UserModel } from '../models/user/User'
-import { CreateUserArgs, DeleteUserArgs, UpdateUserArgs, UserArgs, UsersArgs } from '../models/user/User.types';
+import { Types } from "mongoose";
+
+import { UserModel } from "../models/user/user";
+import {
+  UserArgs,
+  UsersArgs,
+  CreateUserArgs,
+  UpdateUserArgs,
+  DeleteUserArgs,
+} from "./types/user.type.resolver";
 
 export const resolvers = {
-	Query: {
-		user: async (_: unknown, { id }: UserArgs) => {
-			return await UserModel.findById(id)
-		},
-		users: async (
-			_: unknown,
-			{
-				skip = 0,
-				limit = 10,
-				filter,
-			}: UsersArgs
-		) => {
-			const query: any = {}
-			if (filter?.search) {
-				const regex = new RegExp(filter.search, 'i')
-				query.$or = [{ name: regex }, { email: regex }]
-			}
-			return await UserModel.find(query).skip(skip).limit(limit)
-		},
-	},
+  Query: {
+    user: async (_: unknown, { id }: UserArgs) => {
+      return await UserModel.findById(id);
+    },
+    users: async (_: unknown, { skip = 0, limit = 10, filter }: UsersArgs) => {
+      const query: any = {};
+      if (filter?.search) {
+        const regex = new RegExp(filter.search, "i");
+        query.$or = [{ name: regex }, { email: regex }];
+      }
+      return await UserModel.find(query).skip(skip).limit(limit);
+    },
+  },
 
-	Mutation: {
-		createUser: async (_: unknown, { input }: CreateUserArgs) => {
-			const user = new UserModel(input)
-			return await user.save()
-		},
-		updateUser: async (_: unknown, { id, input }: UpdateUserArgs) => {
-			return await UserModel.findByIdAndUpdate(id, input, { new: true })
-		},
-		deleteUser: async (_: unknown, { id }: DeleteUserArgs) => {
-			return await UserModel.findByIdAndDelete(id)
-		},
-	},
+  Mutation: {
+    createUser: async (_: unknown, { input }: CreateUserArgs) => {
+      const user = new UserModel(input);
+      return await user.save();
+    },
+    updateUser: async (_: unknown, { id, input }: UpdateUserArgs) => {
+      return await UserModel.findByIdAndUpdate(id, input, { new: true });
+    },
+    deleteUser: async (_: unknown, { id }: DeleteUserArgs) => {
+      return await UserModel.findByIdAndDelete(id);
+    },
+  },
 
-	User: {
-		id: (parent: { _id: Types.ObjectId | string }) => parent._id.toString(),
-	},
-}
+  User: {
+    id: (parent: { _id: Types.ObjectId | string }) => parent._id.toString(),
+  },
+};
