@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-import { UserModel } from "../models/user/user";
+
 import {
   UserArgs,
   UsersArgs,
@@ -8,6 +8,7 @@ import {
   UpdateUserArgs,
   DeleteUserArgs,
 } from "./types/user.type.resolver";
+import { UserModel } from "../models/user/User";
 
 export const resolvers = {
   Query: {
